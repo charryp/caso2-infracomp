@@ -1,11 +1,10 @@
 
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class LectorConfiguracion {
+public class Opcion1 {
 
 	/**
 	 * Lee el contenido de un archivo dentro de la carpeta DocsConfiguracion.
@@ -30,5 +29,17 @@ public class LectorConfiguracion {
 
     public static String getTAMS(String[] archivo){
         return archivo[2];
+    }
+
+	public void SumadorMatrices(int pnf, int pnc){
+        int filas = pnf;
+        int columnas = pnc;
+
+        for(int i = 0 ; i < filas; i++){
+            for(int j = 0; j < columnas; j++){
+                System.out.print("1 ");
+            }
+            System.out.println();
+        }
     }
 }
