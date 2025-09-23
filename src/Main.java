@@ -30,6 +30,8 @@ public class Main {
         System.out.println("Bienvenido a la aplicacion...   ");
         System.out.println("--------------------------------");
         System.out.println("IMPORTANTE: Los archivos de configuracion debe ubicarlos en la carpeta DocsConfiguracion");
+        System.out.println("IMPORTANTE: La opcion 2 no puede ejecutarse hasta que la opcion 1 haya sido ejecutada exitosamente");
+		System.out.println("Entendido? Presione Enter para continuar...");
         System.out.println("--------------------------------");
         System.out.println("A continuacion, las opciones de la aplicacion: ");
         boolean continuar = true;
@@ -49,9 +51,11 @@ public class Main {
 
 				case 1:
 					input("Desea continuar con la opcion 1? Presiones Enter...");
-					//Opcion 1
+					String ruta = input("Ingrese el nombre del archivo de configuracion (incluya la extension .txt): ");
+					Opcion1 opcion1 = new Opcion1();
+					opcion1.ejecutarOpcion1(ruta);
 					System.out.println("-----------------------------------------------------");
-					System.out.println("La actividad ha sido calificada exitosamente!!");
+					System.out.println("Revise la carpeta SalidaOpcion1!! Puede consultar los archivos de respuesta alli.");
 					System.out.println("-----------------------------------------------------");
 					break;
                 case 2:

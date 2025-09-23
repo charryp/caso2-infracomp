@@ -38,16 +38,15 @@ public class Opcion1 {
         int NPROC = Integer.parseInt(getNPROC(info));
         ArrayList<ArrayList<Integer>> tams = getTAMS(info);
 
-        for(int i = 0 ; i < NPROC; i++){
-            System.out.println("Iniciando proceso " + (i + 1));
+        for(int i = 0, j = 1 ; i < NPROC; i++, j++){
+            System.out.println("Iniciando proceso " + j);
+            int filas = tams.get(i).get(0);
+            int columnas = tams.get(i).get(1);
+            setMatriz1(generarMatrizRandom(filas, columnas));
+            setMatriz2(generarMatrizRandom(filas, columnas));
+            ejecutarSimulador(matriz1, matriz2);
+
         }
-        setMatriz1(generarMatrizRandom(tams[0], tams[1]));
-        setMatriz2(generarMatrizRandom(tams[0], tams[1]));
-        ejecutarSimulador(matriz1, matriz2);
-        //Inicio proceso 2
-        setMatriz1(generarMatrizRandom(tams[2], tams[3]));
-        setMatriz2(generarMatrizRandom(tams[2], tams[3]));
-        ejecutarSimulador(matriz1, matriz2);
 
     }
 	public static ArrayList<String> leerArchivo(String nombreArchivo) throws IOException {
@@ -106,16 +105,17 @@ public class Opcion1 {
     }
 
     public void ejecutarSimulador(int[][] matrizA, int[][] matrizB){
+        //ACA SE DEBEN HACER LAS PAGINANCIONES.
 
     }
-
-	public void generarArchivos(int numProcesos, int TP, int NF, int NC, int NR, int NP, List<String> direcciones) throws IOException{
-		for(int i = 0 ; i < numProcesos; i++){
+/* 
+	public void generarArchivos(int NP, int TP, int NF, int NC, int NR, int NP, List<String> direcciones) throws IOException{
+		for(int i = 0 ; i < NP; i++){
 			Path ruta = Paths.get("src", "DocsConfiguracion", "salida" + i + ".txt");
 			String contenido = "Texto a guardar";
 			Files.write(ruta, Integer.toString(TP)+"\\n".getBytes());
 		}
 		
 	}
-
+*/
 }
