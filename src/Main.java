@@ -64,20 +64,19 @@ public class Main {
 						input("Desea continuar con la opcion 2? Presiones Enter...");
 						//Opcion 2
 						try {
-							// Lee parámetros
-							int totalFrames = Integer.parseInt(input("Ingrese total de marcos (múltiplo del # de procesos): ").trim());
-							int nprocs = Integer.parseInt(input("Ingrese el número de procesos (debe coincidir con proc<i>.txt generados): ").trim());
+							int totalFrames = Integer.parseInt(input("Ingrese total de marcos (múltiplo del numero de procesos): ").trim());
+							int nprocs = Integer.parseInt(input("Ingrese el número de procesos (debe coincidir con la cantidad de .txt generados): ").trim());
 
 							if (nprocs <= 0) {
 								System.out.println("El número de procesos debe ser >= 1.");
 								break;
 							}
 							if (totalFrames <= 0 || (totalFrames % nprocs) != 0) {
-								System.out.println("totalFrames debe ser > 0 y múltiplo de nprocs.");
+								System.out.println("El total de marcos debe ser > 0 y múltiplo del numero de procesos.");
 								break;
 							}
 
-							String rutaCarpeta = input("Ruta carpeta con proc<i>.txt [Enter para 'SalidaOpcion1']: ").trim();
+							String rutaCarpeta = input("Esta a punto de iniciar la simulacion de ejecucion... Continuar Enter...: ").trim();
 							if (rutaCarpeta.isEmpty()) rutaCarpeta = "SalidaOpcion1";
 							Path carpeta = Paths.get(rutaCarpeta);
 

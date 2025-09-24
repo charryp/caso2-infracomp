@@ -1,10 +1,10 @@
 import java.util.Objects;
 
 public class DVReference {
-    private final String etiqueta; // "M1:[f-c]" solo para logs
-    private final int vpn;         // página virtual
-    private final int offset;      // desplazamiento
-    private final char op;         // 'r' o 'w'
+    private final String etiqueta; 
+    private final int vpn;      
+    private final int offset;    
+    private final char op;        
 
     public DVReference(String etiqueta, int vpn, int offset, char op) {
         this.etiqueta = etiqueta;
@@ -13,10 +13,18 @@ public class DVReference {
         this.op = Character.toLowerCase(op);
     }
 
-    public String getEtiqueta() { return etiqueta; }
-    public int getVpn() { return vpn; }
-    public int getOffset() { return offset; }
-    public char getOp() { return op; }
+    public String getEtiqueta() { 
+        return etiqueta; 
+    }
+    public int getVpn() { 
+        return vpn; 
+    }
+    public int getOffset() { 
+        return offset; 
+    }
+    public char getOp() { 
+        return op; 
+    }
 
     @Override
     public String toString() {
@@ -25,7 +33,8 @@ public class DVReference {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof DVReference)) return false;
+        if (!(o instanceof DVReference)) 
+            return false;
         DVReference d = (DVReference)o;
         return vpn == d.vpn && offset == d.offset && op == d.op &&
                Objects.equals(etiqueta, d.etiqueta);

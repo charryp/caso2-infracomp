@@ -1,12 +1,13 @@
-import java.nio.file.*;
-import java.util.*;
+import java.util.List;
+import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class Opcion2 {
 
     public static void ejecutar(int totalFrames, int nprocs, Path carpeta) {
         System.out.println("Inicio:");
 
-        MemoryManager mm = new MemoryManager(totalFrames);
+        MemoryManager manager = new MemoryManager(totalFrames);
         ReferenceLoader loader = new ReferenceLoader();
 
         List<Process> procesos = new ArrayList<>();
@@ -16,7 +17,7 @@ public class Opcion2 {
             procesos.add(p);
         }
 
-        Scheduler sched = new Scheduler(mm);
+        Scheduler sched = new Scheduler(manager);
         sched.run(procesos, totalFrames);
     }
 }

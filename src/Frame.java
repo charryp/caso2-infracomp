@@ -1,7 +1,7 @@
 public class Frame {
     private final int id;
-    private Integer ownerPid; // null o pid
-    private Integer vpn;      // vpn cargada o null
+    private Integer ownerPid;
+    private Integer vpn;
 
     public Frame(int id) {
         this.id = id;
@@ -9,16 +9,32 @@ public class Frame {
         this.vpn = null;
     }
 
-    public int getId() { return id; }
-    public Integer getOwnerPid() { return ownerPid; }
-    public Integer getVpn() { return vpn; }
+    public int getId() { 
+        return id; 
+    }
+    public Integer getOwnerPid() { 
+        return ownerPid; 
+    }
+    public Integer getVpn() { 
+        return vpn; 
+    }
 
-    public void setOwnerPid(Integer ownerPid) { this.ownerPid = ownerPid; }
-    public void setVpn(Integer vpn) { this.vpn = vpn; }
+    public void setOwnerPid(Integer ownerPid) { 
+        this.ownerPid = ownerPid; 
+    }
+    public void setVpn(Integer vpn) { 
+        this.vpn = vpn; 
+    }
 
-    public boolean isFree() { return ownerPid == null; }
-    public boolean isOwnedBy(int pid) { return ownerPid != null && ownerPid == pid; }
-    public boolean hasPageLoaded() { return vpn != null; }
+    public boolean isFree() { 
+        return ownerPid == null; 
+    }
+    public boolean isOwnedBy(int pid) { 
+        return ownerPid != null && ownerPid == pid; 
+    }
+    public boolean hasPageLoaded() { 
+        return vpn != null; 
+    }
 
     @Override
     public String toString() {

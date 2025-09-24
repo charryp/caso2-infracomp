@@ -1,4 +1,8 @@
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.List;
 
 public class MemoryManager {
     private final Frame[] frames;
@@ -12,11 +16,14 @@ public class MemoryManager {
         }
     }
 
-    public int totalFrames() { return frames.length; }
+    public int totalFrames() { 
+        return frames.length; 
+    }
 
-    public Frame getFrame(int id) { return frames[id]; }
+    public Frame getFrame(int id) { 
+        return frames[id]; 
+    }
 
-    /** Asigna marcos del pool libre a un proceso (ownerPid) */
     public List<Integer> allocateFrames(int count, int ownerPid) {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -30,7 +37,6 @@ public class MemoryManager {
         return ids;
     }
 
-    /** Libera un marco por completo al pool libre (sin owner) */
     public void freeFrameToPool(int frameId) {
         Frame f = frames[frameId];
         f.setOwnerPid(null);
@@ -38,18 +44,17 @@ public class MemoryManager {
         freeFrames.addLast(frameId);
     }
 
-    /** Marca que un marco (ya asignado a pid) carga una vpn */
     public void mapPageInFrame(int frameId, int pid, int vpn) {
         Frame f = frames[frameId];
         f.setOwnerPid(pid);
         f.setVpn(vpn);
     }
 
-    /** ¿Existe un marco asignado a pid que esté libre (sin vpn)? */
     public Integer findOwnedEmptyFrame(int pid, Collection<Integer> owned) {
         for (int id : owned) {
             Frame f = frames[id];
-            if (f.isOwnedBy(pid) && f.getVpn() == null) return id;
+            if (f.isOwnedBy(pid) && f.getVpn() == null) 
+                return id;
         }
         return null;
     }

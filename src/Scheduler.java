@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
 
 public class Scheduler {
     private final MemoryManager mm;
@@ -10,11 +12,9 @@ public class Scheduler {
     public void run(List<Process> procesos, int totalFrames) {
         if (procesos.isEmpty()) return;
 
-        // Asignación equitativa inicial
         int n = procesos.size();
         int framesPerProc = totalFrames / n;
 
-        // Asignar frames y loguear
         for (Process p : procesos) {
             List<Integer> got = mm.allocateFrames(framesPerProc, p.getPid());
             for (int f : got) {
@@ -23,13 +23,12 @@ public class Scheduler {
             }
         }
 
-        // Cola RR
         Deque<Process> ready = new ArrayDeque<>();
         for (Process p : procesos) if (p.hasMore()) ready.addLast(p);
 
         while (!ready.isEmpty()) {
             Process p = ready.removeFirst();
-            if (!p.hasMore()) continue; // seguridad
+            if (!p.hasMore()) continue;
 
             int pid = p.getPid();
             System.out.println("Turno proc: " + pid);
@@ -40,22 +39,18 @@ public class Scheduler {
 
             Integer mappedFrame = p.getMappedFrameForVpn(vpn);
             if (mappedFrame != null) {
-                // HIT
                 p.onHit(mappedFrame);
                 System.out.println("PROC " + pid + " hits: " + p.getHits());
-                p.logAging(); // "envejecimiento"
+                p.logAging();
                 if (p.hasMore()) ready.addLast(p);
                 else onProcessFinish(p, ready);
             } else {
-                // FALLO de página
                 boolean replaced = p.handlePageFault(vpn, mm, true);
                 p.logAging();
-                // NO avanzar índice; reintentar en siguiente turno
                 ready.addLast(p);
             }
         }
 
-        // Resumen final
         for (Process p : procesos) {
             int refs = p.getRefs().size();
             int faults = p.getFaults();
@@ -74,13 +69,11 @@ public class Scheduler {
         }
     }
 
-    /** Cuando un proceso termina: libera marcos y reasigna al de más fallas en ejecución */
     private void onProcessFinish(Process finished, Deque<Process> ready) {
         System.out.println("========================  ");
         System.out.println("Termino proc: " + finished.getPid());
         System.out.println("======================== ");
 
-        // Libera marcos del proceso terminado (al pool), log estilo anexo
         List<Integer> frames = finished.releaseAllFrames(mm);
         for (int f : frames) {
             System.out.println("PROC " + finished.getPid() + " removiendo marco: " + f);
@@ -88,7 +81,6 @@ public class Scheduler {
         }
         if (ready.isEmpty()) return;
 
-        // Elegir proceso en ejecución con mayor número de fallas
         Process target = null;
         int maxFaults = -1;
         for (Process p : ready) {
@@ -99,7 +91,6 @@ public class Scheduler {
         }
         if (target == null) return;
 
-        // Reasignar tantos marcos como liberados
         List<Integer> newly = mm.allocateFrames(frames.size(), target.getPid());
         for (int f : newly) {
             target.receiveNewFrame(f);

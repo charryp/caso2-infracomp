@@ -1,6 +1,9 @@
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReferenceLoader {
 
@@ -9,16 +12,20 @@ public class ReferenceLoader {
             String line;
             Integer TP = null, NF = null, NC = null, NR = null, NP = null;
 
-            // Lee cabecera
             for (int i = 0; i < 5; i++) {
                 line = br.readLine();
                 if (line == null) throw new IOException("Archivo corto: falta cabecera");
                 line = line.trim();
-                if (line.startsWith("TP=")) TP = Integer.parseInt(line.substring(3).trim());
-                else if (line.startsWith("NF=")) NF = Integer.parseInt(line.substring(3).trim());
-                else if (line.startsWith("NC=")) NC = Integer.parseInt(line.substring(3).trim());
-                else if (line.startsWith("NR=")) NR = Integer.parseInt(line.substring(3).trim());
-                else if (line.startsWith("NP=")) NP = Integer.parseInt(line.substring(3).trim());
+                if (line.startsWith("TP=")) 
+                    TP = Integer.parseInt(line.substring(3).trim());
+                else if (line.startsWith("NF="))
+                    NF = Integer.parseInt(line.substring(3).trim());
+                else if (line.startsWith("NC=")) 
+                    NC = Integer.parseInt(line.substring(3).trim());
+                else if (line.startsWith("NR=")) 
+                    NR = Integer.parseInt(line.substring(3).trim());
+                else if (line.startsWith("NP=")) 
+                    NP = Integer.parseInt(line.substring(3).trim());
                 else throw new IOException("Cabecera inesperada: " + line);
             }
 
@@ -34,21 +41,18 @@ public class ReferenceLoader {
             System.out.println("PROC " + pid + "leyendo NP. Num Paginas: " + NP);
             System.out.println("PROC " + pid + "== Terminó de leer archivo de configuración ==");
 
-            // Lee referencias
             List<DVReference> refs = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 if (line.isEmpty()) continue;
-                // Formato: M1:[0-0],0,0,r
                 String[] parts = line.split(",");
-                if (parts.length != 4) continue; // ignora rarezas
+                if (parts.length != 4) continue;
                 String etiqueta = parts[0].trim();
                 int vpn = Integer.parseInt(parts[1].trim());
                 int offset = Integer.parseInt(parts[2].trim());
                 char op = parts[3].trim().toLowerCase().charAt(0);
                 refs.add(new DVReference(etiqueta, vpn, offset, op));
             }
-            // Si NR no coincide, no fallamos, pero usamos refs.size()
             int nrEff = refs.size();
 
             return new Process(pid, TP, NF, NC, nrEff, NP, refs);

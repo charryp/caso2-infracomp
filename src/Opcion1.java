@@ -120,11 +120,9 @@ public class Opcion1 {
     }
 
     public List<Integer> ejecutarSimulador(int[][] matrizA, int[][] matrizB, int TP, int NP){
-        //Sumar las matrices.
         int[][] matrizC = sumarMatrices(matrizA.length, matrizA[0].length);
         setMatriz3(matrizC);
         System.out.println("Matrices sumadas exitosamente!!");
-        //Generar listas lineales de matrices.
         ArrayList<Integer> infoA = rawMajorOrderGenerator(matrizA);
         ArrayList<ArrayList<Integer>> infoAuxiliarA = generarAuxiliar(1, matrizA);
         ArrayList<Integer> infoB = rawMajorOrderGenerator(matrizB);
@@ -145,11 +143,9 @@ public class Opcion1 {
         int index = 0;
         for(int i = 0 ; i < NP; i++){
             Page pagina = new Page(TP, i);
-            //LLENAR PAGINA
             for(int j = 0; j < TP && index < info.size(); j++, index++){
                 pagina.addInfo(info.get(index));
             }
-            //AGREGAR PAGINA A LA TABLA DE PAGINAS
             pageTableEntry.addPage(i, pagina);
         }
         return info;
@@ -180,22 +176,18 @@ public class Opcion1 {
     }
 
     public void generarArchivo(int TP, int NF, int NC, int NR, int NP, List<Integer> data, int numProceso) throws IOException{
-        // Crear la carpeta si no existe
         Path carpeta = Paths.get("SalidaOpcion1");
         if (!Files.exists(carpeta)) {
             Files.createDirectories(carpeta);
         }
-        // Nombre del archivo: salida_<timestamp>.txt
         String nombreArchivo = "proc" + numProceso + ".txt";
         Path rutaArchivo = carpeta.resolve(nombreArchivo);
-        // Contenido del archivo
         StringBuilder sb = new StringBuilder();
         sb.append("TP=" + TP).append("\n");
         sb.append("NF=" + NF).append("\n");
         sb.append("NC=" + NC).append("\n");
         sb.append("NR=" + NR).append("\n");
         sb.append("NP=" + NP).append("\n");
-        //calcular celdas por matriz
         for(int i = 0; i < data.size() ; i++){
             String infoCelda;
             infoCelda = "M" + getInfoAuxiliar().get(i).get(0) + ": [" + getInfoAuxiliar().get(i).get(1) + "-" + getInfoAuxiliar().get(i).get(2) + "], ";
