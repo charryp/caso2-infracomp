@@ -1,8 +1,6 @@
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,6 +12,8 @@ import java.util.Random;
 public class Opcion1 {
     private int[][] matriz1;
     private int[][] matriz2;
+    private int[][] matriz3;
+    private ArrayList<ArrayList<Integer>> infoAuxiliar;
 
     public int[][] getMatriz1() {
         return matriz1;
@@ -30,6 +30,18 @@ public class Opcion1 {
     public void setMatriz2(int[][] matriz2) {
         this.matriz2 = matriz2;
     }
+    public int[][] getMatriz3() {
+        return matriz3;
+    }
+    public void setMatriz3(int[][] matriz3) {
+        this.matriz3 = matriz3;
+    }
+    public ArrayList<ArrayList<Integer>> getInfoAuxiliar() {
+        return infoAuxiliar;
+    }
+    public void setInfoAuxiliar(ArrayList<ArrayList<Integer>> infoAuxiliar) {
+        this.infoAuxiliar = infoAuxiliar;
+    }
 
     
 	public void ejecutarOpcion1(String ruta) throws IOException{
@@ -42,15 +54,18 @@ public class Opcion1 {
             System.out.println("Iniciando proceso " + j);
             int filas = tams.get(i).get(0);
             int columnas = tams.get(i).get(1);
+            int NR = filas * columnas * 3; //3 matrices
+            int NP = (int) Math.ceil((NR * 4) / TP); //4 bytes por int
             setMatriz1(generarMatrizRandom(filas, columnas));
             setMatriz2(generarMatrizRandom(filas, columnas));
-            ejecutarSimulador(matriz1, matriz2);
+            List<Integer> data = ejecutarSimulador(matriz1, matriz2, TP, NP);
 
+            generarArchivo(TP, filas, columnas, NR, NP, data, i);
         }
 
     }
 	public static ArrayList<String> leerArchivo(String nombreArchivo) throws IOException {
-		Path ruta = Paths.get("src", "DocsConfiguracion", nombreArchivo);
+		Path ruta = Paths.get("DocsConfiguracion", nombreArchivo);
 		return new ArrayList<>(Arrays.asList(Files.readString(ruta).split("\n")));
 	}
 
@@ -104,18 +119,93 @@ public class Opcion1 {
         return matriz3;
     }
 
-    public void ejecutarSimulador(int[][] matrizA, int[][] matrizB){
+    public List<Integer> ejecutarSimulador(int[][] matrizA, int[][] matrizB, int TP, int NP){
+        //Sumar las matrices.
+        int[][] matrizC = sumarMatrices(matrizA.length, matrizA[0].length);
+        setMatriz3(matrizC);
+        System.out.println("Matrices sumadas exitosamente!!");
+        //Generar listas lineales de matrices.
+        ArrayList<Integer> infoA = rawMajorOrderGenerator(matrizA);
+        ArrayList<ArrayList<Integer>> infoAuxiliarA = generarAuxiliar(1, matrizA);
+        ArrayList<Integer> infoB = rawMajorOrderGenerator(matrizB);
+        ArrayList<ArrayList<Integer>> infoAuxiliarB = generarAuxiliar(2, matrizB);
+        ArrayList<Integer> infoC = rawMajorOrderGenerator(matrizC);
+        ArrayList<ArrayList<Integer>> infoAuxiliarC = generarAuxiliar(3, matrizC);
+        ArrayList<Integer> info = new ArrayList<>();
+        info.addAll(infoA);
+        info.addAll(infoB);
+        info.addAll(infoC);
+        ArrayList<ArrayList<Integer>> infoAuxiliar = new ArrayList<>();
+        infoAuxiliar.addAll(infoAuxiliarA);
+        infoAuxiliar.addAll(infoAuxiliarB);
+        infoAuxiliar.addAll(infoAuxiliarC);
+        setInfoAuxiliar(infoAuxiliar);
         //ACA SE DEBEN HACER LAS PAGINANCIONES.
+        PageTableEntry pageTableEntry = new PageTableEntry();
+        int index = 0;
+        for(int i = 0 ; i < NP; i++){
+            Page pagina = new Page(TP, i);
+            //LLENAR PAGINA
+            for(int j = 0; j < TP && index < info.size(); j++, index++){
+                pagina.addInfo(info.get(index));
+            }
+            //AGREGAR PAGINA A LA TABLA DE PAGINAS
+            pageTableEntry.addPage(i, pagina);
+        }
+        return info;
 
     }
-/* 
-	public void generarArchivos(int NP, int TP, int NF, int NC, int NR, int NP, List<String> direcciones) throws IOException{
-		for(int i = 0 ; i < NP; i++){
-			Path ruta = Paths.get("src", "DocsConfiguracion", "salida" + i + ".txt");
-			String contenido = "Texto a guardar";
-			Files.write(ruta, Integer.toString(TP)+"\\n".getBytes());
-		}
-		
-	}
-*/
+    public ArrayList<ArrayList<Integer>>  generarAuxiliar(int num, int[][] matriz){
+        ArrayList<ArrayList<Integer>> info = new ArrayList<>();
+        for(int i = 0 ; i < matriz.length; i++){
+            for(int j = 0 ; j < matriz[0].length; j++){
+                ArrayList<Integer> auxiliar = new ArrayList<>();
+                auxiliar.add(num);
+                auxiliar.add(i);
+                auxiliar.add(j);
+                info.add(auxiliar);
+            }
+        }
+        return info;
+    }
+
+    public ArrayList<Integer> rawMajorOrderGenerator(int[][] matriz){
+        ArrayList<Integer> info = new ArrayList<>();
+        for(int i = 0 ; i < matriz.length; i++){
+            for(int j = 0 ; j < matriz[0].length; j++){
+                info.add(matriz[i][j]);
+            }
+        }
+        return info;
+    }
+
+    public void generarArchivo(int TP, int NF, int NC, int NR, int NP, List<Integer> data, int numProceso) throws IOException{
+        // Crear la carpeta si no existe
+        Path carpeta = Paths.get("SalidaOpcion1");
+        if (!Files.exists(carpeta)) {
+            Files.createDirectories(carpeta);
+        }
+        // Nombre del archivo: salida_<timestamp>.txt
+        String nombreArchivo = "proc" + numProceso + ".txt";
+        Path rutaArchivo = carpeta.resolve(nombreArchivo);
+        // Contenido del archivo
+        StringBuilder sb = new StringBuilder();
+        sb.append("TP=" + TP).append("\n");
+        sb.append("NF=" + NF).append("\n");
+        sb.append("NC=" + NC).append("\n");
+        sb.append("NR=" + NR).append("\n");
+        sb.append("NP=" + NP).append("\n");
+        //calcular celdas por matriz
+        for(int i = 0; i < data.size() ; i++){
+            String infoCelda;
+            infoCelda = "M" + getInfoAuxiliar().get(i).get(0) + ": [" + getInfoAuxiliar().get(i).get(1) + "-" + getInfoAuxiliar().get(i).get(2) + "], ";
+            infoCelda += i / TP + ", ";
+            infoCelda += i % TP + ", ";
+            infoCelda += "r";
+            sb.append(infoCelda).append("\n");
+        }
+
+        Files.write(rutaArchivo, sb.toString().getBytes());
+    }
+
 }

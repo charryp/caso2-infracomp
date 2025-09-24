@@ -26,7 +26,7 @@ public class Main {
 		}
 	}
 
-    public static void main(String args[]){
+    public static void main(String args[]) throws IOException{
         System.out.println("Bienvenido a la aplicacion...   ");
         System.out.println("--------------------------------");
         System.out.println("IMPORTANTE: Los archivos de configuracion debe ubicarlos en la carpeta DocsConfiguracion");
@@ -38,40 +38,40 @@ public class Main {
 
         while (continuar) {
 				mostrarMenu(menuOpciones);
-				int seleccion = Integer.parseInt(input("\nSeleccione una opcion: "));
-				System.out.println("\n");
+				int seleccion = Integer.parseInt(input("Seleccione una opcion: "));
 
 				switch (seleccion) {
-				case 0:
-					input("Desea salir de la App? Presione Enter...");
-					System.out.println("-----------------------------------------------------");
-					System.out.println("Vuelva pronto!!");
-					System.out.println("-----------------------------------------------------");
-					System.exit(0);
+					case 0:
+						input("Desea salir de la App? Presione Enter...");
+						System.out.println("-----------------------------------------------------");
+						System.out.println("Vuelva pronto!!");
+						System.out.println("-----------------------------------------------------");
+						System.exit(0);
 
-				case 1:
-					input("Desea continuar con la opcion 1? Presiones Enter...");
-					String ruta = input("Ingrese el nombre del archivo de configuracion (incluya la extension .txt): ");
-					Opcion1 opcion1 = new Opcion1();
-					opcion1.ejecutarOpcion1(ruta);
-					System.out.println("-----------------------------------------------------");
-					System.out.println("Revise la carpeta SalidaOpcion1!! Puede consultar los archivos de respuesta alli.");
-					System.out.println("-----------------------------------------------------");
-					break;
-                case 2:
-					input("Desea continuar con la opcion 2? Presiones Enter...");
-					//Opcion 2
-					System.out.println("-----------------------------------------------------");
-					System.out.println("La actividad ha sido calificada exitosamente!!");
-					System.out.println("-----------------------------------------------------");
-					break;
-				default:
-					input("La seleccion no es valida. Presione Enter y vuelva a intentar...");
-					break;
+					case 1:
+						input("Desea continuar con la opcion 1? Presiones Enter...");
+						String ruta = input("Ingrese el nombre del archivo de configuracion (incluya la extension .txt): ");
+						Opcion1 opcion1 = new Opcion1();
+						opcion1.ejecutarOpcion1(ruta);
+						System.out.println("-----------------------------------------------------");
+						System.out.println("Revise la carpeta SalidaOpcion1!! Puede consultar los archivos de respuesta alli.");
+						System.out.println("-----------------------------------------------------");
+						break;
+					case 2:
+						input("Desea continuar con la opcion 2? Presiones Enter...");
+						//Opcion 2
+						System.out.println("-----------------------------------------------------");
+						System.out.println("La actividad ha sido calificada exitosamente!!");
+						System.out.println("-----------------------------------------------------");
+						break;
+					default:
+						input("La seleccion no es valida. Presione Enter y vuelva a intentar...");
+						break;
 				}
 
     }
 
     
     
+}
 }
