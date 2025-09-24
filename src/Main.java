@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 public class Main {
     private static String[] menuOpciones = new String[] {
@@ -60,9 +63,35 @@ public class Main {
 					case 2:
 						input("Desea continuar con la opcion 2? Presiones Enter...");
 						//Opcion 2
-						System.out.println("-----------------------------------------------------");
-						System.out.println("La actividad ha sido calificada exitosamente!!");
-						System.out.println("-----------------------------------------------------");
+						try {
+							// Lee parámetros
+							int totalFrames = Integer.parseInt(input("Ingrese total de marcos (múltiplo del # de procesos): ").trim());
+							int nprocs = Integer.parseInt(input("Ingrese el número de procesos (debe coincidir con proc<i>.txt generados): ").trim());
+
+							if (nprocs <= 0) {
+								System.out.println("El número de procesos debe ser >= 1.");
+								break;
+							}
+							if (totalFrames <= 0 || (totalFrames % nprocs) != 0) {
+								System.out.println("totalFrames debe ser > 0 y múltiplo de nprocs.");
+								break;
+							}
+
+							String rutaCarpeta = input("Ruta carpeta con proc<i>.txt [Enter para 'SalidaOpcion1']: ").trim();
+							if (rutaCarpeta.isEmpty()) rutaCarpeta = "SalidaOpcion1";
+							Path carpeta = Paths.get(rutaCarpeta);
+
+							System.out.println("-----------------------------------------------------");
+							System.out.println("Iniciando simulación (Opción 2)...");
+							Opcion2.ejecutar(totalFrames, nprocs, carpeta);
+							System.out.println("-----------------------------------------------------");
+							System.out.println("Simulación finalizada. Revise las estadísticas en la consola.");
+							System.out.println("-----------------------------------------------------");
+						} catch (NumberFormatException e) {
+							System.out.println("Entrada inválida. Debe ingresar números enteros.");
+						} catch (Exception e) {
+							System.out.println("Error al ejecutar la Opción 2: " + e.getMessage());
+						}
 						break;
 					default:
 						input("La seleccion no es valida. Presione Enter y vuelva a intentar...");
